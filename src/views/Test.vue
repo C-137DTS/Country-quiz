@@ -36,13 +36,13 @@ export default {
   data() {
     return {
       questions: [],
-      questionIndex: 0,
-      isCorrect: undefined,
+      questionIndex: 0, // This is for show each question and is 0 becuase questions is an array
+      isCorrect: undefined, // The answer is correct or no
       countriesIndex: new Array(4)
         .fill(0)
-        .map((n) => Math.floor(Math.random() * 36 + n)),
+        .map((n) => Math.floor(Math.random() * 36 + n)), // Select the countries randomly (The API return an array with the countries info)
       points: 0,
-      options: [],
+      options: [], // The answer options like A. Spain, B. Italy...
     };
   },
 
@@ -51,6 +51,7 @@ export default {
       .then((res) => res.json())
       .then((data) => {
         this.countriesIndex.forEach((n, i) => {
+          // This push the country info to this.questions and add a type for the question that can be flag or capital
           if (i % 2 === 0) {
             this.questions.push({
               ...data[n],
@@ -69,26 +70,18 @@ export default {
 
   methods: {
     checkAnswer(answer) {
-      if (this.questions[this.questionIndex].type === "flag") {
-        if (answer === this.questions[this.questionIndex].name) {
-          this.isCorrect = true;
-          this.points += 1;
-        } else {
-          this.isCorrect = false;
-        }
+      // Answer is received from an event emitted by Answer component
+      if (answer === this.questions[this.questionIndex].name) {
+        this.isCorrect = true;
+        this.points += 1;
       } else {
-        if (answer === this.questions[this.questionIndex].name) {
-          this.isCorrect = true;
-          this.points += 1;
-        } else {
-          this.isCorrect = false;
-        }
+        this.isCorrect = false;
       }
     },
     nextQuestion() {
-      this.questionIndex += 1;
-      this.options = this.getOptions();
-      this.isCorrect = false;
+      this.questionIndex += 1; // Change the question
+      this.options = this.getOptions(); // Change the order of the options
+      this.isCorrect = false; // Hide the next question button
     },
     getOptions() {
       const order = this.getOrder();
@@ -96,9 +89,12 @@ export default {
       return this.changePosition(order);
     },
     getOrder() {
+      // Chosse two different numbers
       const order = new Array(2)
         .fill(0)
-        .map((n) => Math.floor(Math.random() * 4 + n));
+        .map((n) => Math.floor(Math.random() * 4 + n)); // Choose a number between 0 and 3
+
+      // Check that the numbers be differents
       if (order[0] === order[1] && order[0] !== 3) {
         order[1] = order[0] + 1;
         return order;
@@ -110,8 +106,10 @@ export default {
       return order;
     },
     changePosition(positions) {
-      let questionsCopy = [...this.questions];
+      let questionsCopy = [...this.questions]; // For don't mutate this.questions
       positions.forEach((n) => {
+        // Change the position of questionCopy[0] and questionCopy[1]
+        // For get different order of the answers
         const aux = questionsCopy[n];
         questionsCopy[n] = questionsCopy[0];
         questionsCopy[0] = aux;
