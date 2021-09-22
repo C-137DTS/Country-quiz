@@ -7,7 +7,11 @@
         alt="adventure"
         class="adventure"
       />
-      <div v-show="questions[questionIndex].type == 'flag'">
+      <div
+        v-if="
+          questions[questionIndex] && questions[questionIndex].type == 'flag'
+        "
+      >
         <img :src="questions[questionIndex].flag" alt="flag" class="flag" />
         <p>Which country does this flag belong to?</p>
         <answer :answer="options[0].name" option="A" @selected="checkAnswer" />
@@ -15,7 +19,11 @@
         <answer :answer="options[2].name" option="C" @selected="checkAnswer" />
         <answer :answer="options[3].name" option="D" @selected="checkAnswer" />
       </div>
-      <div v-show="questions[questionIndex].type == 'capital'">
+      <div
+        v-if="
+          questions[questionIndex] && questions[questionIndex].type == 'capital'
+        "
+      >
         <p>{{ questions[questionIndex].capital }} is the capital of</p>
         <answer :answer="options[0].name" option="A" @selected="checkAnswer" />
         <answer :answer="options[1].name" option="B" @selected="checkAnswer" />
